@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+
+  <title>Type-N-Speak</title>
+</head>
+
+<body>
+	<button id="speak-btn">SPEAK</button>
+	<button id="listen">LISTEN</button>
+	<button id="show">SHOW</button>
+	<input type="text" name="input">
+	<span id="msg"></span>
+	<font id="error" color="red"></font>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/punycode/1.4.1/punycode.min.js"></script>
+<script src="https://cdn.jotfor.ms/static/prototype.forms.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/static/jotform.forms.js?3.3.13886" type="text/javascript"></script>
+<script type="text/javascript">
+	JotForm.init(function(){
+
+ JotForm.calendarMonths = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+ JotForm.calendarDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+ JotForm.calendarOther = {"today":"Today"};
+ var languageOptions = document.querySelectorAll('#langList li'); 
+ for(var langIndex = 0; langIndex < languageOptions.length; langIndex++) { 
+   languageOptions[langIndex].on('click', function(e) { setTimeout(function(){ JotForm.setCalendar("7", false, {"days":{"monday":true,"tuesday":true,"wednesday":true,"thursday":true,"friday":true,"saturday":true,"sunday":true},"future":true,"past":true,"custom":false,"ranges":false,"start":"","end":""}); }, 0); });
+ } 
+ JotForm.setCalendar("7", false, {"days":{"monday":true,"tuesday":true,"wednesday":true,"thursday":true,"friday":true,"saturday":true,"sunday":true},"future":true,"past":true,"custom":false,"ranges":false,"start":"","end":""});
+      setTimeout(function() {
+          $('input_16').hint('ex: 23');
+       }, 20);
+    if(typeof $('input_17').spinner !== 'undefined') {$('input_17').spinner({ imgPath:'https://cdn.jotfor.ms/images/', width: '60', maxValue:'', minValue:'', allowNegative: false, addAmount: 1, value:'' });}
+    $('input_17').up(2).setAttribute('tabindex',0);
+$('input_19').rating({stars:'5', inputClassName:'form-textbox', imagePath: 'https://cdn.jotfor.ms/images/stars.png', cleanFirst:true, value:''});
+$('input_19').setAttribute('tabindex',0);
+$('input_19').setAttribute('aria-labelledby','label_19');
+Array.from($('input_19').children).map(function(e, i){e.setAttribute('tabindex',0); if(i<5) {e.setAttribute('aria-label',(i+1)+' out of 5');}  e.setAttribute('role','button'); e.onkeypress = function(k){if(k.keyCode == 13 || k.keyCode == 32)e.click()}});
+      JotForm.alterTexts({"ageVerificationError":"Bu formu göndermek için {minAge} yaşından büyük olmanız gerekiyor.","alphabetic":"Bu alan yalnızca harf kullanılarak doldurulabilir","alphanumeric":"Bu alan yalnızca harf ve sayı içerebilir.","ccDonationMinLimitError":"Minimum tutar {minAmount} {currency}","ccInvalidCVC":"CVC numarası geçersiz.","ccInvalidExpireDate":"Son kullanma tarihi geçersiz.","ccInvalidNumber":"Kredi Kartı Numarası geçersiz.","ccMissingDetails":"Lütfen kredi kartı bilgilerini doldurun.","ccMissingDonation":"Lütfen bağış tutarı için sayısal değerler girin.","ccMissingProduct":"Lütfen en az bir ürün seçin.","characterLimitError":"Çok fazla karakter girdiniz. Maksimum:","characterMinLimitError":"Çok az karakter girdiniz. Minimum:","confirmClearForm":"Formu temizlemek istediğinize emin misiniz?","confirmEmail":"E-posta eşleşmiyor","currency":"Bu dosya sadece geçerli değerler içerebilir","cyrillic":"Bu alan sadece Kiril karakterleri içerebilir","dateInvalid":"Bu tarih geçerli değil. Tarih biçimi: {format}","dateInvalidSeparate":"Bu tarih geçerli değil. Geçerli bir {element} girin.","dateLimited":"Bu tarih kullanılamaz.","disallowDecimals":"Bir tam sayı girin.","email":"Geçerli bir e-posta adresi girin","fillMask":"Alan değeri maskesi doldurmalıdır.","freeEmailError":"Ücretsiz email hesaplarına izin verilmez","generalError":"Formunuzda hatalar var. Lütfen devam etmeden önce düzeltin.","generalPageError":"Bu sayfada hatalar var. Devam etmeden önce lütfen düzeltin.","gradingScoreError":"Toplam puan şundan az ya da şuna eşit olmalıdır:","incompleteFields":"Bazı zorunlu alanlar doldurulmamış. Lütfen bu alanları doldurun.","inputCarretErrorA":"Girdi minimum değerden az olamaz:","inputCarretErrorB":"Girdi maksimum değerden büyük olamaz:","lessThan":"Puanınız şundan az ya da şuna eşit olmalıdır:","maxDigitsError":"Kabul edilebilen maksimum basamak sayısı","maxSelectionsError":"İzin verilen maksimum seçim sayısı:","minSelectionsError":"Gerekli minimum seçim sayısı:","multipleFileUploads_emptyError":"{file} boş, lütfen dosyaları bu dosya olmadan tekrar seçin.","multipleFileUploads_fileLimitError":"Sadece {fileLimit} dosya yüklemesine izin verilmektedir.","multipleFileUploads_minSizeError":"{file} çok küçük, minimum dosya boyutu {minSizeLimit}.","multipleFileUploads_onLeave":"Dosyalar yükleniyor, şimdi çıkarsanız yükleme iptal edilecek.","multipleFileUploads_sizeError":"{file} çok büyük, maksimum dosya boyutu {sizeLimit}.","multipleFileUploads_typeError":"{file} geçersiz dosya uzantısına sahip. Sadece {extensions} dosya uzantılarına izin verilmektedir.","numeric":"Bu alan sadece sayısal değerler içerebilir","pastDatesDisallowed":"Tarih geçmişte olmamalı.","required":"Bu alan zorunludur.","requireEveryCell":"Bütün hücreler zorunlu.","requireEveryRow":"Bütün satırlar zorunlu.","requireOne":"En az bir alan zorunlu.","uploadExtensions":"Yalnızca şu dosyaları yükleyebilirsiniz:","uploadFilesize":"Dosya boyutu daha büyük olamaz:","uploadFilesizemin":"Dosya boyutu belirtilenden küçük olamaz:","url":"Bu alan yalnızca geçerli bir URL içerebilir","wordLimitError":"Çok fazla kelime girdiniz. Maksimum:","wordMinLimitError":"Çok az kelime girdiniz. Minimum:"});
+	JotForm.clearFieldOnHide="disable";
+	JotForm.submitError="jumpToFirstError";
+    /*INIT-END*/
+	});
+
+   JotForm.prepareCalculationsOnTheFly([null,{"name":"fillingFrom","qid":"1","text":"Filling From with Speech","type":"control_head"},null,{"description":"","name":"name","qid":"3","text":"Name","type":"control_fullname"},{"description":"","name":"email","qid":"4","subLabel":"example@example.com","text":"Email","type":"control_email"},{"description":"","name":"phoneNumber","qid":"5","text":"Phone Number","type":"control_phone"},{"description":"","name":"address","qid":"6","text":"Address","type":"control_address"},{"description":"","name":"birthday","qid":"7","text":"Birthday","type":"control_datetime"},{"name":"submit","qid":"8","text":"Submit","type":"control_button"},{"description":"","name":"time","qid":"9","text":"Time","type":"control_time"},{"description":"","name":"howAre","qid":"10","subLabel":"","text":"How are you, today?","type":"control_textbox"},{"description":"","name":"pleaseTell","qid":"11","subLabel":"","text":"Please tell us something about you","type":"control_textarea"},null,{"description":"","name":"whatIs","qid":"13","subLabel":"","text":"What is your favorite season?","type":"control_dropdown"},{"description":"","name":"chooseYour","qid":"14","text":"Choose your answer","type":"control_radio"},{"description":"","name":"chooseYour15","qid":"15","text":"Choose your answers","type":"control_checkbox"},{"description":"","name":"tellUs","qid":"16","subLabel":"","text":"Tell us your lucky number","type":"control_number"},{"description":"","name":"howMany","qid":"17","subLabel":"","text":"How many hours a week do you read a book?","type":"control_spinner"},{"description":"","name":"pleaseFill","qid":"18","text":"Please fill the table","type":"control_matrix"},{"description":"","name":"pleaseRate21","qid":"19","subLabel":"","text":"Please rate our application(fill the form by speech)","type":"control_rating"},{"description":"","name":"pleaseRate","qid":"20","text":"Please rate our f","type":"control_scale"}]);
+   setTimeout(function() {
+JotForm.paymentExtrasOnTheFly([null,{"name":"fillingFrom","qid":"1","text":"Filling From with Speech","type":"control_head"},null,{"description":"","name":"name","qid":"3","text":"Name","type":"control_fullname"},{"description":"","name":"email","qid":"4","subLabel":"example@example.com","text":"Email","type":"control_email"},{"description":"","name":"phoneNumber","qid":"5","text":"Phone Number","type":"control_phone"},{"description":"","name":"address","qid":"6","text":"Address","type":"control_address"},{"description":"","name":"birthday","qid":"7","text":"Birthday","type":"control_datetime"},{"name":"submit","qid":"8","text":"Submit","type":"control_button"},{"description":"","name":"time","qid":"9","text":"Time","type":"control_time"},{"description":"","name":"howAre","qid":"10","subLabel":"","text":"How are you, today?","type":"control_textbox"},{"description":"","name":"pleaseTell","qid":"11","subLabel":"","text":"Please tell us something about you","type":"control_textarea"},null,{"description":"","name":"whatIs","qid":"13","subLabel":"","text":"What is your favorite season?","type":"control_dropdown"},{"description":"","name":"chooseYour","qid":"14","text":"Choose your answer","type":"control_radio"},{"description":"","name":"chooseYour15","qid":"15","text":"Choose your answers","type":"control_checkbox"},{"description":"","name":"tellUs","qid":"16","subLabel":"","text":"Tell us your lucky number","type":"control_number"},{"description":"","name":"howMany","qid":"17","subLabel":"","text":"How many hours a week do you read a book?","type":"control_spinner"},{"description":"","name":"pleaseFill","qid":"18","text":"Please fill the table","type":"control_matrix"},{"description":"","name":"pleaseRate21","qid":"19","subLabel":"","text":"Please rate our application(fill the form by speech)","type":"control_rating"},{"description":"","name":"pleaseRate","qid":"20","text":"Please rate our f","type":"control_scale"}]);}, 20); 
+</script>
+<link href="https://cdn.jotfor.ms/static/formCss.css?3.3.13886" rel="stylesheet" type="text/css" />
+<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/css/styles/nova.css?3.3.13886" />
+<link type="text/css" media="print" rel="stylesheet" href="https://cdn.jotfor.ms/css/printForm.css?3.3.13886" />
+<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/themes/CSS/566a91c2977cdfcd478b4567.css?"/>
+<style type="text/css">
+    .form-label-left{
+        width:150px;
+    }
+    .form-line{
+        padding-top:12px;
+        padding-bottom:12px;
+    }
+    .form-label-right{
+        width:150px;
+    }
+    .form-all{
+        width:690px;
+        color:#555 !important;
+        font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, sans-serif;
+        font-size:14px;
+    }
+</style>
+
+<style type="text/css" id="form-designer-style">
+    /* Injected CSS Code */
+.form-label.form-label-auto { display: block; float: none; text-align: left; width: inherit; } /*__INSPECT_SEPERATOR__*/
+    /* Injected CSS Code */
+</style>
+
+<form class="jotform-form" action="https://submit.jotformpro.com/submit/92732837531966/" method="post" name="form_92732837531966" id="92732837531966" accept-charset="utf-8">
+  <input type="hidden" name="formID" value="92732837531966" />
+  <input type="hidden" id="JWTContainer" value="" />
+  <input type="hidden" id="cardinalOrderNumber" value="" />
+  <div role="main" class="form-all">
+    <ul class="form-section page-section">
+      <li id="cid_1" class="form-input-wide" data-type="control_head">
+        <div class="form-header-group ">
+          <div class="header-text httal htvam">
+            <h2 id="header_1" class="form-header" data-component="header">
+              Filling From with Speech
+            </h2>
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_fullname" id="id_3">
+        <label class="form-label form-label-top form-label-auto" id="label_3" for="first_3"> Name </label>
+        <div id="cid_3" class="form-input-wide">
+          <div data-wrapper-react="true">
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <input type="text" id="first_3" name="q3_name[first]" class="form-textbox" size="10" value="" data-component="first" aria-labelledby="label_3 sublabel_3_first" />
+              <label class="form-sub-label" for="first_3" id="sublabel_3_first" style="min-height:13px"> First Name </label>
+            </span>
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <input type="text" id="last_3" name="q3_name[last]" class="form-textbox" size="15" value="" data-component="last" aria-labelledby="label_3 sublabel_3_last" />
+              <label class="form-sub-label" for="last_3" id="sublabel_3_last" style="min-height:13px"> Last Name </label>
+            </span>
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_email" id="id_4">
+        <label class="form-label form-label-top form-label-auto" id="label_4" for="input_4"> Email </label>
+        <div id="cid_4" class="form-input-wide">
+          <span class="form-sub-label-container " style="vertical-align:top">
+            <input type="email" id="input_4" name="q4_email" class="form-textbox validate[Email]" size="30" value="" data-component="email" aria-labelledby="label_4 sublabel_input_4" />
+            <label class="form-sub-label" for="input_4" id="sublabel_input_4" style="min-height:13px"> example@example.com </label>
+          </span>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_phone" id="id_5">
+        <label class="form-label form-label-top form-label-auto" id="label_5" for="input_5_area"> Phone Number </label>
+        <div id="cid_5" class="form-input-wide">
+          <div data-wrapper-react="true">
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <input type="tel" id="input_5_area" name="q5_phoneNumber[area]" class="form-textbox" size="6" value="" data-component="areaCode" aria-labelledby="label_5 sublabel_5_area" />
+              <span class="phone-separate" aria-hidden="true">
+                 -
+              </span>
+              <label class="form-sub-label" for="input_5_area" id="sublabel_5_area" style="min-height:13px"> Area Code </label>
+            </span>
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <input type="tel" id="input_5_phone" name="q5_phoneNumber[phone]" class="form-textbox" size="12" value="" data-component="phone" aria-labelledby="label_5 sublabel_5_phone" />
+              <label class="form-sub-label" for="input_5_phone" id="sublabel_5_phone" style="min-height:13px"> Phone Number </label>
+            </span>
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_address" id="id_6">
+        <label class="form-label form-label-top form-label-auto" id="label_6" for="input_6_addr_line1"> Address </label>
+        <div id="cid_6" class="form-input-wide">
+          <table summary="" class="form-address-table">
+            <tbody>
+              <tr>
+                <td colSpan="2">
+                  <span class="form-sub-label-container " style="vertical-align:top">
+                    <input type="text" id="input_6_addr_line1" name="q6_address[addr_line1]" class="form-textbox form-address-line" autoComplete="address-line1" value="" data-component="address_line_1" aria-labelledby="label_6 sublabel_6_addr_line1" />
+                    <label class="form-sub-label" for="input_6_addr_line1" id="sublabel_6_addr_line1" style="min-height:13px"> Street Address </label>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  <span class="form-sub-label-container " style="vertical-align:top">
+                    <input type="text" id="input_6_addr_line2" name="q6_address[addr_line2]" class="form-textbox form-address-line" autoComplete="address-line2" size="46" value="" data-component="address_line_2" aria-labelledby="label_6 sublabel_6_addr_line2" />
+                    <label class="form-sub-label" for="input_6_addr_line2" id="sublabel_6_addr_line2" style="min-height:13px"> Street Address Line 2 </label>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="form-sub-label-container " style="vertical-align:top">
+                    <input type="text" id="input_6_city" name="q6_address[city]" class="form-textbox form-address-city" autoComplete="address-level2" size="21" value="" data-component="city" aria-labelledby="label_6 sublabel_6_city" />
+                    <label class="form-sub-label" for="input_6_city" id="sublabel_6_city" style="min-height:13px"> City </label>
+                  </span>
+                </td>
+                <td>
+                  <span class="form-sub-label-container " style="vertical-align:top">
+                    <input type="text" id="input_6_state" name="q6_address[state]" class="form-textbox form-address-state" autoComplete="address-level1" size="22" value="" data-component="state" aria-labelledby="label_6 sublabel_6_state" />
+                    <label class="form-sub-label" for="input_6_state" id="sublabel_6_state" style="min-height:13px"> State / Province </label>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="form-sub-label-container " style="vertical-align:top">
+                    <input type="text" id="input_6_postal" name="q6_address[postal]" class="form-textbox form-address-postal" autoComplete="postal-code" size="10" value="" data-component="zip" aria-labelledby="label_6 sublabel_6_postal" />
+                    <label class="form-sub-label" for="input_6_postal" id="sublabel_6_postal" style="min-height:13px"> Postal / Zip Code </label>
+                  </span>
+                </td>
+                <td style="display:none">
+                  <span class="form-sub-label-container " style="vertical-align:top">
+                    <select class="form-dropdown form-address-country noTranslate" name="q6_address[country]" id="input_6_country" data-component="country" aria-labelledby="label_6 sublabel_6_country" autoComplete="new-password">
+                      <option value=""> Please Select </option>
+                      <option value="Amerika Birleşik Devletleri"> Amerika Birleşik Devletleri </option>
+                      <option value="Afganistan"> Afganistan </option>
+                      <option value="Arnavutluk"> Arnavutluk </option>
+                      <option value="Cezayir"> Cezayir </option>
+                      <option value="Amerikan Samoası"> Amerikan Samoası </option>
+                      <option value="Andorra"> Andorra </option>
+                      <option value="Angola"> Angola </option>
+                      <option value="Anguilla"> Anguilla </option>
+                      <option value="Antigua ve Barbuda"> Antigua ve Barbuda </option>
+                      <option value="Arjantin"> Arjantin </option>
+                      <option value="Ermenistan"> Ermenistan </option>
+                      <option value="Aruba"> Aruba </option>
+                      <option value="Avustralya"> Avustralya </option>
+                      <option value="Avusturya"> Avusturya </option>
+                      <option value="Azerbaycan"> Azerbaycan </option>
+                      <option value="Bahamalar"> Bahamalar </option>
+                      <option value="Bahreyn"> Bahreyn </option>
+                      <option value="Bangladesh"> Bangladesh </option>
+                      <option value="Barbados"> Barbados </option>
+                      <option value="Beyaz Rusya"> Beyaz Rusya </option>
+                      <option value="Belçika"> Belçika </option>
+                      <option value="Belize"> Belize </option>
+                      <option value="Benin"> Benin </option>
+                      <option value="Bermuda"> Bermuda </option>
+                      <option value="Bhutan"> Bhutan </option>
+                      <option value="Bolivya"> Bolivya </option>
+                      <option value="Bosna-Hersek"> Bosna-Hersek </option>
+                      <option value="Botsvana"> Botsvana </option>
+                      <option value="Brezilya"> Brezilya </option>
+                      <option value="Brunei"> Brunei </option>
+                      <option value="Bulgaristan"> Bulgaristan </option>
+                      <option value="Burkina Faso"> Burkina Faso </option>
+                      <option value="Burundi"> Burundi </option>
+                      <option value="Kamboçya"> Kamboçya </option>
+                      <option value="Kamerun"> Kamerun </option>
+                      <option value="Kanada"> Kanada </option>
+                      <option value="Cape Verde"> Cape Verde </option>
+                      <option value="Cayman Adaları"> Cayman Adaları </option>
+                      <option value="Orta Afrika Cumhuriyeti"> Orta Afrika Cumhuriyeti </option>
+                      <option value="Çad"> Çad </option>
+                      <option value="Şili"> Şili </option>
+                      <option value="Çin"> Çin </option>
+                      <option value="Christmas Adası"> Christmas Adası </option>
+                      <option value="Cocos Adaları"> Cocos Adaları </option>
+                      <option value="Kolombiya"> Kolombiya </option>
+                      <option value="Komorlar"> Komorlar </option>
+                      <option value="Kongo"> Kongo </option>
+                      <option value="Cook Adaları"> Cook Adaları </option>
+                      <option value="Kosta Rika"> Kosta Rika </option>
+                      <option value="Cote d&#x27;Ivoire"> Cote d&#x27;Ivoire </option>
+                      <option value="Hırvatistan"> Hırvatistan </option>
+                      <option value="Küba"> Küba </option>
+                      <option value="Kıbrıs"> Kıbrıs </option>
+                      <option value="Çek Cumhuriyeti"> Çek Cumhuriyeti </option>
+                      <option value="Demokratik Kongo Cumhuriyeti"> Demokratik Kongo Cumhuriyeti </option>
+                      <option value="Danimarka"> Danimarka </option>
+                      <option value="Cibuti"> Cibuti </option>
+                      <option value="Dominika"> Dominika </option>
+                      <option value="Dominik Cumhuriyeti"> Dominik Cumhuriyeti </option>
+                      <option value="Ekvator"> Ekvator </option>
+                      <option value="Mısır"> Mısır </option>
+                      <option value="El Salvador"> El Salvador </option>
+                      <option value="Ekvator Ginesi"> Ekvator Ginesi </option>
+                      <option value="Eritre"> Eritre </option>
+                      <option value="Estonya"> Estonya </option>
+                      <option value="Etiyopya"> Etiyopya </option>
+                      <option value="Falkland Adaları"> Falkland Adaları </option>
+                      <option value="Faroe Adaları"> Faroe Adaları </option>
+                      <option value="Fiji"> Fiji </option>
+                      <option value="Finlandiya"> Finlandiya </option>
+                      <option value="Fransa"> Fransa </option>
+                      <option value="Fransız Polinezyası"> Fransız Polinezyası </option>
+                      <option value="Gabon"> Gabon </option>
+                      <option value="Gambiya"> Gambiya </option>
+                      <option value="Gürcistan"> Gürcistan </option>
+                      <option value="Almanya"> Almanya </option>
+                      <option value="Gana"> Gana </option>
+                      <option value="Cebelitarık"> Cebelitarık </option>
+                      <option value="Yunanistan"> Yunanistan </option>
+                      <option value="Grönland"> Grönland </option>
+                      <option value="Grenada"> Grenada </option>
+                      <option value="Guadeloupe"> Guadeloupe </option>
+                      <option value="Önerileriniz"> Önerileriniz </option>
+                      <option value="Guatemala"> Guatemala </option>
+                      <option value="Guernsey"> Guernsey </option>
+                      <option value="Gine"> Gine </option>
+                      <option value="Gine-Bissau"> Gine-Bissau </option>
+                      <option value="Guyana"> Guyana </option>
+                      <option value="Haiti"> Haiti </option>
+                      <option value="Honduras"> Honduras </option>
+                      <option value="Hong Kong"> Hong Kong </option>
+                      <option value="Macaristan"> Macaristan </option>
+                      <option value="İzlanda"> İzlanda </option>
+                      <option value="Hindistan"> Hindistan </option>
+                      <option value="Endonezya"> Endonezya </option>
+                      <option value="İran"> İran </option>
+                      <option value="Irak"> Irak </option>
+                      <option value="İrlanda"> İrlanda </option>
+                      <option value="İsrail"> İsrail </option>
+                      <option value="İtalya"> İtalya </option>
+                      <option value="Jamaika"> Jamaika </option>
+                      <option value="Japonya"> Japonya </option>
+                      <option value="Jersey"> Jersey </option>
+                      <option value="Ürdün"> Ürdün </option>
+                      <option value="Kazakistan"> Kazakistan </option>
+                      <option value="Kenya"> Kenya </option>
+                      <option value="Kiribati"> Kiribati </option>
+                      <option value="Kuzey Kore"> Kuzey Kore </option>
+                      <option value="Güney Kore"> Güney Kore </option>
+                      <option value="Kosova"> Kosova </option>
+                      <option value="Kuveyt"> Kuveyt </option>
+                      <option value="Kırgızistan"> Kırgızistan </option>
+                      <option value="Laos"> Laos </option>
+                      <option value="Letonya"> Letonya </option>
+                      <option value="Lübnan"> Lübnan </option>
+                      <option value="Lesoto"> Lesoto </option>
+                      <option value="Liberya"> Liberya </option>
+                      <option value="Libya"> Libya </option>
+                      <option value="Lihtenştayn"> Lihtenştayn </option>
+                      <option value="Litvanya"> Litvanya </option>
+                      <option value="Lüksemburg"> Lüksemburg </option>
+                      <option value="Makao"> Makao </option>
+                      <option value="Makedonya"> Makedonya </option>
+                      <option value="Madagaskar"> Madagaskar </option>
+                      <option value="Malavi"> Malavi </option>
+                      <option value="Malezya"> Malezya </option>
+                      <option value="Maldivler"> Maldivler </option>
+                      <option value="Mali"> Mali </option>
+                      <option value="Malta"> Malta </option>
+                      <option value="Marşal Adaları"> Marşal Adaları </option>
+                      <option value="Martinik"> Martinik </option>
+                      <option value="Moritanya"> Moritanya </option>
+                      <option value="Morityus"> Morityus </option>
+                      <option value="Mayotte"> Mayotte </option>
+                      <option value="Meksika"> Meksika </option>
+                      <option value="Mikronezya"> Mikronezya </option>
+                      <option value="Moldova"> Moldova </option>
+                      <option value="Monaco"> Monaco </option>
+                      <option value="Moğolistan"> Moğolistan </option>
+                      <option value="Karadağ"> Karadağ </option>
+                      <option value="Montserrat"> Montserrat </option>
+                      <option value="Fas"> Fas </option>
+                      <option value="Mozambik"> Mozambik </option>
+                      <option value="Myanmar (Burma)"> Myanmar (Burma) </option>
+                      <option value="Dağlık Karabağ"> Dağlık Karabağ </option>
+                      <option value="Namibya"> Namibya </option>
+                      <option value="Nauru"> Nauru </option>
+                      <option value="Nepal"> Nepal </option>
+                      <option value="Hollanda"> Hollanda </option>
+                      <option value="Hollanda Antilleri"> Hollanda Antilleri </option>
+                      <option value="Yeni Kaledonya"> Yeni Kaledonya </option>
+                      <option value="Yeni Zelanda"> Yeni Zelanda </option>
+                      <option value="Nikaragua"> Nikaragua </option>
+                      <option value="Nijer"> Nijer </option>
+                      <option value="Nijerya"> Nijerya </option>
+                      <option value="Niue"> Niue </option>
+                      <option value="Norfolk Adası"> Norfolk Adası </option>
+                      <option value="Kuzey Kıbrıs Türk Cumhuriyeti"> Kuzey Kıbrıs Türk Cumhuriyeti </option>
+                      <option value="Kuzey Mariana Adaları"> Kuzey Mariana Adaları </option>
+                      <option value="Norveç"> Norveç </option>
+                      <option value="Oman"> Oman </option>
+                      <option value="Pakistan"> Pakistan </option>
+                      <option value="Palau"> Palau </option>
+                      <option value="Filistin"> Filistin </option>
+                      <option value="Panama"> Panama </option>
+                      <option value="Papua Yeni Gine"> Papua Yeni Gine </option>
+                      <option value="Paraguay"> Paraguay </option>
+                      <option value="Peru"> Peru </option>
+                      <option value="Filipinler"> Filipinler </option>
+                      <option value="Pitcairn Adaları"> Pitcairn Adaları </option>
+                      <option value="Polonya"> Polonya </option>
+                      <option value="Portekiz"> Portekiz </option>
+                      <option value="Porto Riko"> Porto Riko </option>
+                      <option value="Katar"> Katar </option>
+                      <option value="Kongo Cumhuriyeti"> Kongo Cumhuriyeti </option>
+                      <option value="Romanya"> Romanya </option>
+                      <option value="Rusya"> Rusya </option>
+                      <option value="Ruanda"> Ruanda </option>
+                      <option value="Saint Barthelemy"> Saint Barthelemy </option>
+                      <option value="Saint Helena"> Saint Helena </option>
+                      <option value="Saint Kitts ve Nevis"> Saint Kitts ve Nevis </option>
+                      <option value="Aziz Lucia"> Aziz Lucia </option>
+                      <option value="Saint Martin"> Saint Martin </option>
+                      <option value="Saint Pierre ve Miquelon"> Saint Pierre ve Miquelon </option>
+                      <option value="Saint Vincent ve Grenadinler"> Saint Vincent ve Grenadinler </option>
+                      <option value="Samoa"> Samoa </option>
+                      <option value="San Marino"> San Marino </option>
+                      <option value="Sao Tome ve Principe"> Sao Tome ve Principe </option>
+                      <option value="Suudi Arabistan"> Suudi Arabistan </option>
+                      <option value="Senegal"> Senegal </option>
+                      <option value="S&amp;Auml;&amp;plusmn;rbistan"> S&amp;Auml;&amp;plusmn;rbistan </option>
+                      <option value="Seychelles"> Seychelles </option>
+                      <option value="Sierra Leone"> Sierra Leone </option>
+                      <option value="Singapur"> Singapur </option>
+                      <option value="Slovakya"> Slovakya </option>
+                      <option value="Slovenya"> Slovenya </option>
+                      <option value="Solomon Adaları"> Solomon Adaları </option>
+                      <option value="Somali"> Somali </option>
+                      <option value="Somaliland"> Somaliland </option>
+                      <option value="Güney Afrika"> Güney Afrika </option>
+                      <option value="G&amp;Atilde;&amp;frac14;ney Osetya"> G&amp;Atilde;&amp;frac14;ney Osetya </option>
+                      <option value="Güney Sudan"> Güney Sudan </option>
+                      <option value="İspanya"> İspanya </option>
+                      <option value="Sri Lanka"> Sri Lanka </option>
+                      <option value="Sudan"> Sudan </option>
+                      <option value="Surinam"> Surinam </option>
+                      <option value="Svalbard"> Svalbard </option>
+                      <option value="eSwatini"> eSwatini </option>
+                      <option value="İsveç"> İsveç </option>
+                      <option value="İsviçre"> İsviçre </option>
+                      <option value="Suriye"> Suriye </option>
+                      <option value="Tayvan"> Tayvan </option>
+                      <option value="Tacikistan"> Tacikistan </option>
+                      <option value="Tanzanya"> Tanzanya </option>
+                      <option value="Tayland"> Tayland </option>
+                      <option value="Timor-Leste"> Timor-Leste </option>
+                      <option value="Togo"> Togo </option>
+                      <option value="Tokelau"> Tokelau </option>
+                      <option value="Tonga"> Tonga </option>
+                      <option value="Transdinyester"> Transdinyester </option>
+                      <option value="Trinidad ve Tobago"> Trinidad ve Tobago </option>
+                      <option value="Tristan da Cunha"> Tristan da Cunha </option>
+                      <option value="Tunus"> Tunus </option>
+                      <option value="Türkiye"> Türkiye </option>
+                      <option value="Türkmenistan"> Türkmenistan </option>
+                      <option value="Turks ve Caicos Adaları"> Turks ve Caicos Adaları </option>
+                      <option value="Tuvalu"> Tuvalu </option>
+                      <option value="Uganda"> Uganda </option>
+                      <option value="Ukrayna"> Ukrayna </option>
+                      <option value="Birleşik Arap Emirlikleri"> Birleşik Arap Emirlikleri </option>
+                      <option value="Birleşik Krallık"> Birleşik Krallık </option>
+                      <option value="Uruguay"> Uruguay </option>
+                      <option value="Özbekistan"> Özbekistan </option>
+                      <option value="Vanuatu"> Vanuatu </option>
+                      <option value="Vatikan"> Vatikan </option>
+                      <option value="Venezüella"> Venezüella </option>
+                      <option value="Vietnam"> Vietnam </option>
+                      <option value="İngiliz Virgin Adaları"> İngiliz Virgin Adaları </option>
+                      <option value="Man Adası"> Man Adası </option>
+                      <option value="US Virgin Islands"> US Virgin Islands </option>
+                      <option value="Wallis ve Futuna"> Wallis ve Futuna </option>
+                      <option value="Batı Sahara"> Batı Sahara </option>
+                      <option value="Yemen"> Yemen </option>
+                      <option value="Zambiya"> Zambiya </option>
+                      <option value="Zimbabve"> Zimbabve </option>
+                      <option value="other"> Diğer </option>
+                    </select>
+                    <label class="form-sub-label" for="input_6_country" id="sublabel_6_country" style="min-height:13px"> Country </label>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_datetime" id="id_7">
+        <label class="form-label form-label-top form-label-auto" id="label_7" for="lite_mode_7"> Birthday </label>
+        <div id="cid_7" class="form-input-wide">
+          <div data-wrapper-react="true">
+            <div style="display:none">
+              <span class="form-sub-label-container " style="vertical-align:top">
+                <input type="tel" class="form-textbox validate[limitDate]" id="day_7" name="q7_birthday[day]" size="2" data-maxlength="2" value="" aria-labelledby="label_7 sublabel_7_day" />
+                <span class="date-separate" aria-hidden="true">
+                   -
+                </span>
+                <label class="form-sub-label" for="day_7" id="sublabel_7_day" style="min-height:13px"> Day </label>
+              </span>
+              <span class="form-sub-label-container " style="vertical-align:top">
+                <input type="tel" class="form-textbox validate[limitDate]" id="month_7" name="q7_birthday[month]" size="2" data-maxlength="2" value="" aria-labelledby="label_7 sublabel_7_month" />
+                <span class="date-separate" aria-hidden="true">
+                   -
+                </span>
+                <label class="form-sub-label" for="month_7" id="sublabel_7_month" style="min-height:13px"> Month </label>
+              </span>
+              <span class="form-sub-label-container " style="vertical-align:top">
+                <input type="tel" class="form-textbox validate[limitDate]" id="year_7" name="q7_birthday[year]" size="4" data-maxlength="4" value="" aria-labelledby="label_7 sublabel_7_year" />
+                <label class="form-sub-label" for="year_7" id="sublabel_7_year" style="min-height:13px"> Year </label>
+              </span>
+            </div>
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <input type="text" class="form-textbox validate[limitDate, validateLiteDate]" id="lite_mode_7" size="12" data-maxlength="12" data-age="" value="" data-format="ddmmyyyy" data-seperator="-" placeholder="gg-aa-yyyy" aria-labelledby="label_7 sublabel_7_litemode" />
+              <img alt="Tarih seç" id="input_7_pick" src="https://cdn.jotfor.ms/images/calendar.png" style="vertical-align:middle;margin-left:5px" data-component="datetime" aria-hidden="true" />
+              <label class="form-sub-label" for="lite_mode_7" id="sublabel_7_litemode" style="min-height:13px"> Date </label>
+            </span>
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <label class="form-sub-label" for="input_7_pick" style="border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"> Date Picker Icon </label>
+            </span>
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_time" id="id_9">
+        <label class="form-label form-label-top form-label-auto" id="label_9" for="input_9_hourSelect"> Time </label>
+        <div id="cid_9" class="form-input-wide">
+          <div data-wrapper-react="true">
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <select class="time-dropdown form-dropdown" id="input_9_hourSelect" name="q9_time[hourSelect]" data-component="time-hour" aria-labelledby="label_9 sublabel_9_hour">
+                <option>  </option>
+                <option value="1"> 1 </option>
+                <option value="2"> 2 </option>
+                <option value="3"> 3 </option>
+                <option value="4"> 4 </option>
+                <option value="5"> 5 </option>
+                <option value="6"> 6 </option>
+                <option value="7"> 7 </option>
+                <option value="8"> 8 </option>
+                <option value="9"> 9 </option>
+                <option value="10"> 10 </option>
+                <option value="11"> 11 </option>
+                <option value="12"> 12 </option>
+              </select>
+              <span class="date-separate">
+                 :
+              </span>
+              <label class="form-sub-label" for="input_9_hourSelect" id="sublabel_9_hour" style="min-height:13px"> Hour </label>
+            </span>
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <select class="time-dropdown form-dropdown" id="input_9_minuteSelect" name="q9_time[minuteSelect]" data-component="time-minute" aria-labelledby="label_9 sublabel_9_minutes">
+                <option>  </option>
+                <option value="00"> 00 </option>
+                <option value="10"> 10 </option>
+                <option value="20"> 20 </option>
+                <option value="30"> 30 </option>
+                <option value="40"> 40 </option>
+                <option value="50"> 50 </option>
+              </select>
+              <label class="form-sub-label" for="input_9_minuteSelect" id="sublabel_9_minutes" style="min-height:13px"> Minutes </label>
+            </span>
+            <span class="form-sub-label-container " style="vertical-align:top">
+              <select class="time-dropdown form-dropdown" id="input_9_ampm" name="q9_time[ampm]" data-component="time-ampm" aria-labelledby="label_9 sublabel_9_ampm">
+                <option selected="" value="AM"> ÖÖ </option>
+                <option value="PM"> ÖS </option>
+              </select>
+              <label class="form-sub-label" for="input_9_ampm" id="sublabel_9_ampm" style="border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"> AM/PM Option </label>
+            </span>
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_textbox" id="id_10">
+        <label class="form-label form-label-top form-label-auto" id="label_10" for="input_10"> How are you, today? </label>
+        <div id="cid_10" class="form-input-wide">
+          <input type="text" id="input_10" name="q10_howAre" data-type="input-textbox" class="form-textbox" size="20" value="" data-component="textbox" aria-labelledby="label_10" />
+        </div>
+      </li>
+      <li class="form-line" data-type="control_textarea" id="id_11">
+        <label class="form-label form-label-top form-label-auto" id="label_11" for="input_11"> Please tell us something about you </label>
+        <div id="cid_11" class="form-input-wide">
+          <textarea id="input_11" class="form-textarea" name="q11_pleaseTell" cols="40" rows="6" data-component="textarea" aria-labelledby="label_11"></textarea>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_dropdown" id="id_13">
+        <label class="form-label form-label-top form-label-auto" id="label_13" for="input_13"> What is your favorite season? </label>
+        <div id="cid_13" class="form-input-wide">
+          <select class="form-dropdown" id="input_13" name="q13_whatIs" style="width:150px" data-component="dropdown" aria-labelledby="label_13">
+            <option value="">  </option>
+            <option value="Sonbahar"> Sonbahar </option>
+            <option value="Kış"> Kış </option>
+            <option value="İlkbahar"> İlkbahar </option>
+            <option value="Yaz"> Yaz </option>
+          </select>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_radio" id="id_14">
+        <label class="form-label form-label-top form-label-auto" id="label_14" for="input_14"> Choose your answer </label>
+        <div id="cid_14" class="form-input-wide">
+          <div class="form-single-column" role="group" aria-labelledby="label_14" data-component="radio">
+            <span class="form-radio-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="radio" class="form-radio" id="input_14_0" name="q14_chooseYour" value="Cevap 1" />
+              <label id="label_input_14_0" for="input_14_0"> Cevap 1 </label>
+            </span>
+            <span class="form-radio-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="radio" class="form-radio" id="input_14_1" name="q14_chooseYour" value="Cevap  2" />
+              <label id="label_input_14_1" for="input_14_1"> Cevap 2 </label>
+            </span>
+            <span class="form-radio-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="radio" class="form-radio" id="input_14_2" name="q14_chooseYour" value="Cevap  3" />
+              <label id="label_input_14_2" for="input_14_2"> Cevap 3 </label>
+            </span>
+            <span class="form-radio-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="radio" class="form-radio" id="input_14_3" name="q14_chooseYour" value="Cevap  4" />
+              <label id="label_input_14_3" for="input_14_3"> Cevap 4 </label>
+            </span>
+            <span class="form-radio-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="radio" class="form-radio" id="input_14_4" name="q14_chooseYour" value="Cevap 5" />
+              <label id="label_input_14_4" for="input_14_4"> Cevap 5 </label>
+            </span>
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_checkbox" id="id_15">
+        <label class="form-label form-label-top form-label-auto" id="label_15" for="input_15"> Choose your answers </label>
+        <div id="cid_15" class="form-input-wide">
+          <div class="form-single-column" role="group" aria-labelledby="label_15" data-component="checkbox">
+            <span class="form-checkbox-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="checkbox" class="form-checkbox" id="input_15_0" name="q15_chooseYour15[]" value="Cevap 1" />
+              <label id="label_input_15_0" for="input_15_0"> Cevap 1 </label>
+            </span>
+            <span class="form-checkbox-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="checkbox" class="form-checkbox" id="input_15_1" name="q15_chooseYour15[]" value="Cevap  2" />
+              <label id="label_input_15_1" for="input_15_1"> Cevap 2 </label>
+            </span>
+            <span class="form-checkbox-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="checkbox" class="form-checkbox" id="input_15_2" name="q15_chooseYour15[]" value="Cevap  3" />
+              <label id="label_input_15_2" for="input_15_2"> Cevap 3 </label>
+            </span>
+            <span class="form-checkbox-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="checkbox" class="form-checkbox" id="input_15_3" name="q15_chooseYour15[]" value="Cevap  4" />
+              <label id="label_input_15_3" for="input_15_3"> Cevap 4 </label>
+            </span>
+            <span class="form-checkbox-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="checkbox" class="form-checkbox" id="input_15_4" name="q15_chooseYour15[]" value="Cevap 5" />
+              <label id="label_input_15_4" for="input_15_4"> Cevap 5 </label>
+            </span>
+            <span class="form-checkbox-item" style="clear:left">
+              <span class="dragger-item">
+              </span>
+              <input type="checkbox" class="form-checkbox" id="input_15_5" name="q15_chooseYour15[]" value="Cevap 6" />
+              <label id="label_input_15_5" for="input_15_5"> Cevap 6 </label>
+            </span>
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_number" id="id_16">
+        <label class="form-label form-label-top form-label-auto" id="label_16" for="input_16"> Tell us your lucky number </label>
+        <div id="cid_16" class="form-input-wide">
+          <input type="number" id="input_16" name="q16_tellUs" data-type="input-number" class=" form-number-input form-textbox" style="width:60px" size="5" value="" placeholder="ex: 23" data-component="number" aria-labelledby="label_16" />
+        </div>
+      </li>
+      <li class="form-line" data-type="control_spinner" id="id_17">
+        <label class="form-label form-label-top form-label-auto" id="label_17" for="input_17"> How many hours a week do you read a book? </label>
+        <div id="cid_17" class="form-input-wide">
+          <div data-wrapper-react="true">
+            <input type="number" id="input_17" name="q17_howMany" data-type="input-spinner" class="form-spinner-input  form-textbox" value="" data-component="spinner" aria-labelledby="label_17" />
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_matrix" id="id_18">
+        <label class="form-label form-label-top form-label-auto" id="label_18" for="input_18"> Please fill the table </label>
+        <div id="cid_18" class="form-input-wide">
+          <table summary="" cellPadding="4" cellSpacing="0" class="form-matrix-table" data-component="matrix">
+            <tbody>
+              <tr>
+                <th style="border:none">
+                   
+                </th>
+                <th scope="col" class="form-matrix-column-headers form-matrix-column_0">
+                  <label id="label_18_col_0"> Tatmin Edici Değil </label>
+                </th>
+                <th scope="col" class="form-matrix-column-headers form-matrix-column_1">
+                  <label id="label_18_col_1"> Kısmen Memnun Edici </label>
+                </th>
+                <th scope="col" class="form-matrix-column-headers form-matrix-column_2">
+                  <label id="label_18_col_2"> Memnun Edici </label>
+                </th>
+                <th scope="col" class="form-matrix-column-headers form-matrix-column_3">
+                  <label id="label_18_col_3"> Çok Menmun Edici </label>
+                </th>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left" class="form-matrix-row-headers">
+                  <label id="label_18_row_0"> Service Quality </label>
+                </th>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_0_0" class="form-radio" name="q18_pleaseFill[0]" value="Tatmin Edici Değil" aria-labelledby="label_18 label_18_row_0 label_18_col_0" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_0_1" class="form-radio" name="q18_pleaseFill[0]" value="Kısmen Memnun Edici" aria-labelledby="label_18 label_18_row_0 label_18_col_1" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_0_2" class="form-radio" name="q18_pleaseFill[0]" value="Memnun Edici" aria-labelledby="label_18 label_18_row_0 label_18_col_2" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_0_3" class="form-radio" name="q18_pleaseFill[0]" value="Çok Menmun Edici" aria-labelledby="label_18 label_18_row_0 label_18_col_3" />
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left" class="form-matrix-row-headers">
+                  <label id="label_18_row_1"> Cleanliness </label>
+                </th>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_1_0" class="form-radio" name="q18_pleaseFill[1]" value="Tatmin Edici Değil" aria-labelledby="label_18 label_18_row_1 label_18_col_0" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_1_1" class="form-radio" name="q18_pleaseFill[1]" value="Kısmen Memnun Edici" aria-labelledby="label_18 label_18_row_1 label_18_col_1" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_1_2" class="form-radio" name="q18_pleaseFill[1]" value="Memnun Edici" aria-labelledby="label_18 label_18_row_1 label_18_col_2" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_1_3" class="form-radio" name="q18_pleaseFill[1]" value="Çok Menmun Edici" aria-labelledby="label_18 label_18_row_1 label_18_col_3" />
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left" class="form-matrix-row-headers">
+                  <label id="label_18_row_2"> Responsiveness </label>
+                </th>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_2_0" class="form-radio" name="q18_pleaseFill[2]" value="Tatmin Edici Değil" aria-labelledby="label_18 label_18_row_2 label_18_col_0" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_2_1" class="form-radio" name="q18_pleaseFill[2]" value="Kısmen Memnun Edici" aria-labelledby="label_18 label_18_row_2 label_18_col_1" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_2_2" class="form-radio" name="q18_pleaseFill[2]" value="Memnun Edici" aria-labelledby="label_18 label_18_row_2 label_18_col_2" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_2_3" class="form-radio" name="q18_pleaseFill[2]" value="Çok Menmun Edici" aria-labelledby="label_18 label_18_row_2 label_18_col_3" />
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left" class="form-matrix-row-headers">
+                  <label id="label_18_row_3"> Friendliness </label>
+                </th>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_3_0" class="form-radio" name="q18_pleaseFill[3]" value="Tatmin Edici Değil" aria-labelledby="label_18 label_18_row_3 label_18_col_0" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_3_1" class="form-radio" name="q18_pleaseFill[3]" value="Kısmen Memnun Edici" aria-labelledby="label_18 label_18_row_3 label_18_col_1" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_3_2" class="form-radio" name="q18_pleaseFill[3]" value="Memnun Edici" aria-labelledby="label_18 label_18_row_3 label_18_col_2" />
+                </td>
+                <td style="text-align:center" class="form-matrix-values">
+                  <input type="radio" id="input_18_3_3" class="form-radio" name="q18_pleaseFill[3]" value="Çok Menmun Edici" aria-labelledby="label_18 label_18_row_3 label_18_col_3" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_rating" id="id_19">
+        <label class="form-label form-label-top form-label-auto" id="label_19" for="input_19"> Please rate our application(fill the form by speech) </label>
+        <div id="cid_19" class="form-input-wide">
+          <div id="input_19" name="q19_pleaseRate21" data-component="rating">
+            <select name="q19_pleaseRate21">
+              <option value="1"> 1 </option>
+              <option value="2"> 2 </option>
+              <option value="3"> 3 </option>
+              <option value="4"> 4 </option>
+              <option value="5"> 5 </option>
+            </select>
+          </div>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_scale" id="id_20">
+        <label class="form-label form-label-top form-label-auto" id="label_20" for="input_20"> Please rate our f </label>
+        <div id="cid_20" class="form-input-wide">
+          <span class="form-sub-label-container " style="vertical-align:top">
+            <table role="radiogroup" aria-labelledby="label_20 sublabel_input_20_description" cellPadding="4" cellSpacing="0" class="form-scale-table" data-component="scale">
+              <tbody>
+                <tr>
+                  <th>
+                     
+                  </th>
+                  <th style="text-align:center">
+                    <label for="input_20_1"> 1 </label>
+                  </th>
+                  <th style="text-align:center">
+                    <label for="input_20_2"> 2 </label>
+                  </th>
+                  <th style="text-align:center">
+                    <label for="input_20_3"> 3 </label>
+                  </th>
+                  <th style="text-align:center">
+                    <label for="input_20_4"> 4 </label>
+                  </th>
+                  <th style="text-align:center">
+                    <label for="input_20_5"> 5 </label>
+                  </th>
+                  <th>
+                     
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    <label for="input_20_worst" aria-hidden="true"> Worst </label>
+                  </td>
+                  <td style="text-align:center">
+                    <input type="radio" class="form-radio" name="q20_pleaseRate" value="1" title="1" id="input_20_1" />
+                  </td>
+                  <td style="text-align:center">
+                    <input type="radio" class="form-radio" name="q20_pleaseRate" value="2" title="2" id="input_20_2" />
+                  </td>
+                  <td style="text-align:center">
+                    <input type="radio" class="form-radio" name="q20_pleaseRate" value="3" title="3" id="input_20_3" />
+                  </td>
+                  <td style="text-align:center">
+                    <input type="radio" class="form-radio" name="q20_pleaseRate" value="4" title="4" id="input_20_4" />
+                  </td>
+                  <td style="text-align:center">
+                    <input type="radio" class="form-radio" name="q20_pleaseRate" value="5" title="5" id="input_20_5" />
+                  </td>
+                  <td>
+                    <label for="input_20_best" aria-hidden="true"> Best </label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <label class="form-sub-label" id="sublabel_input_20_description" style="border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap"> 1 is Worst, 5 is Best </label>
+          </span>
+        </div>
+      </li>
+      <li class="form-line" data-type="control_button" id="id_8">
+        <div id="cid_8" class="form-input-wide">
+          <div style="margin-left:156px" class="form-buttons-wrapper ">
+            <button id="input_8" type="submit" class="form-submit-button" data-component="button">
+              Submit
+            </button>
+          </div>
+        </div>
+      </li>
+      <li style="display:none">
+        Should be Empty:
+        <input type="text" name="website" value="" />
+      </li>
+    </ul>
+  </div>
+  <script>
+  JotForm.showJotFormPowered = "0";
+  </script>
+  <input type="hidden" id="simple_spc" name="simple_spc" value="92732837531966" />
+  <script type="text/javascript">
+  document.getElementById("si" + "mple" + "_spc").value = "92732837531966-92732837531966";
+  </script>
+</form>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
