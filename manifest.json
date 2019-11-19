@@ -1,0 +1,25 @@
+{
+	"manifest_version": 2,
+	"name": "Open Microphone to Fill",
+	"version": "0.1",
+	"icons": {
+		"16": "stt.png",
+		"64": "stt.png",
+		"128": "stt.png"
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"http://form.jotform.com/*",
+				"https://form.jotform.com/*"
+			],
+			"js": ["content.js"]
+		}
+	],
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"browser_action": {
+		"default_icon": "logo.png"
+	}
+} 
