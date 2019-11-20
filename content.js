@@ -746,7 +746,7 @@ function listen() {
 }
 
 var questions = createQuestions();
-var f_index = 0;
+var f_index = 14;
 var s_index = 0;
 var flag = true;
 var row_index = 0 // for matrix
