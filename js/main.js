@@ -7,6 +7,9 @@ function createQuestions () {
         let questions = [];
 
         for (let i =0; i<form.length; i++) {
+            form[i].onclick = function() {
+              findIndex(this);
+            }
             let type = form[i].getAttribute("data-type");
             let question = {
                 type: "",
@@ -14,7 +17,8 @@ function createQuestions () {
                 sub_question_arr: []
             };
 
-            if (type === "control_fullname" || type === "control_email" || type === "control_phone" || type === "control_address" || type === "control_datetime" || type === "control_time") {
+            if (isAvailable(type)) {
+                if (type === "control_fullname" || type === "control_email" || type === "control_phone" || type === "control_address" || type === "control_datetime" || type === "control_time") {
 
                 let q_title = form[i].querySelector("label").textContent.trim();
                 question.type = type;
@@ -86,6 +90,7 @@ function createQuestions () {
 
                 question.sub_question_arr.push(sub_question);
                 questions.push(question);
+            
             }
             else if (type === "control_radio" || type === "control_checkbox") {
                 let q_title = form[i].querySelector("label").textContent.trim();
@@ -108,6 +113,7 @@ function createQuestions () {
                 }
 
                 questions.push(question);
+            
             }
             else if (type === "control_spinner") {
                 let q_title = form[i].querySelector("label").textContent.trim();
@@ -145,6 +151,7 @@ function createQuestions () {
                 question.sub_question_arr.push(sub_question);
 
                 questions.push(question);
+            
             }
             else if (type === "control_rating") {
                 let q_title = form[i].querySelector("label").textContent.trim();
@@ -194,6 +201,7 @@ function createQuestions () {
                 }
 
                 questions.push(question);
+            
             }
             else if (type === "control_matrix") {
                 let q_title = form[i].querySelector("label").textContent.trim();
@@ -236,10 +244,13 @@ function createQuestions () {
                 }
 
                 questions.push(question);
+            
+            }
             }
 
         }
         return questions;
+
 };
 
 var f_index = 0;
@@ -251,7 +262,12 @@ var error_msg = "";
 
 const form_lis = document.querySelectorAll(".form-line");
 const questions = createQuestions();
+const submit_button = document.querySelector("button.form-submit-button");
 highlighted();
+
+if (questions[f_index].type === "control_dropdown") {
+  questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
+}
 
 function speak(word) {
   // Check if speaking
@@ -272,6 +288,7 @@ function speak(word) {
     
   synth.speak(speakText);
   return true;
+
 };
 
 // should put delay for speaking
@@ -281,6 +298,19 @@ speak_btn.addEventListener("click", function() {
   
 });
 
+document.addEventListener('focusin', function() {
+  if (document.activeElement != girdi) {
+    var indexes = updateIndexes(document.activeElement);
+    console.log(indexes);
+    if (indexes.first_index !== -1 && indexes.second_index !== -1) {
+      unhighlighted();
+      f_index = indexes.first_index;
+      s_index = indexes.second_index;
+      highlighted();
+    } 
+  }
+  
+}, true);
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
@@ -316,11 +346,12 @@ function listen() {
     }
     
     recognition.start();
+
 }
 
-function test() {
+function test(transcript) {
   
-  girdi.value = girdi.value.trim().toLowerCase();
+  transcript = transcript.trim().toLowerCase();
 
   while(f_index < questions.length) {
     
@@ -328,78 +359,113 @@ function test() {
     var question = questions[f_index];
     var sub_questions = question.sub_question_arr;
     
-    if (girdi.value === "atla") {
+    if (findQuestionNumber(transcript) >= 0) {
+      unhighlighted();
+      f_index = findQuestionNumber(transcript);
+      highlighted();
+      if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
+      }
+      //console.log(f_index);
+      return;
+    }
+    if (transcript === "atla") {
       unhighlighted();
       if (questions[f_index].type === "control_matrix") {
         var lines = document.querySelector("li[data-type = 'control_matrix']").querySelectorAll("tr");
         lines[row_index+1].style.border = "none";
+      }if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = 0;
       }
       f_index++;
+      if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
+      }
+      s_index = 0;
       highlighted();
-      girdi.value = "";
+      transcript = "";
       break;
+    }else if (transcript === "bitir" || transcript === "tamamla") {
+      debugger;
+      submit_button.style.boxShadow = "0 0 3pt 3pt #719ECE";
+      submit_button.click();
     }
 
     if (question.type === "control_radio"  || question.type === "control_checkbox") {
-      if (girdi.value === "ilerle") {
+      if (transcript === "ilerle") {
         unhighlighted();
         f_index++;
         highlighted();
-        girdi.value = "";
+        transcript = "";
         break;
-      }else if (girdi.value === "geri gel") {
+      }else if (transcript === "geri gel") {
         unhighlighted();
+        if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = 0;
+        }
         f_index--;
         highlighted();
-        girdi.value = "";
+        transcript = "";
         break;
-      }else if (girdi.value === "sil") {
+      }else if (transcript === "sil") {
         var options = question.sub_question_arr;
         for (var i = 0; i<options.length; i++)
           options[i].q_answer.checked = false;
 
         return;
       }
-      if (girdi.value !== "") {
+      if (transcript !== "") {
         var options = question.sub_question_arr;
         for (var i = 0; i<options.length; i++){
-          if (options[i].q_description.toLowerCase() === girdi.value){
+          if (options[i].q_description.toLowerCase() === transcript){
             options[i].q_answer.click();
-            girdi.value = "";
+            return test("ilerle");
+          }
+        }
+        if (transcript.indexOf(". seçenek") > 0) {
+          var index = parseInt(transcript.substring(0, transcript.indexOf(".")));
+          if (index <= options.length){
+            
+            options[index-1].q_answer.click();
             return;
           }
         }
-        error_msg = "Yanlis girdi (Dropdown)";
+        error_msg = "Yanlis girdi (Checkbox)";
       }
       
-      girdi.value = "";
+      transcript = "";
       return;
     }else if (question.type === "control_spinner") {
-      if (girdi.value.toLowerCase() === "ilerle") {
+      if (transcript === "ilerle") {
         unhighlighted();
         f_index++;
         highlighted();
-        girdi.value = "";
         break;
-      }else if (girdi.value.toLowerCase() === "arttır")
+      }else if (transcript === "geri gel") {
+        unhighlighted();
+        f_index--;
+        highlighted();
+        break;
+      }else if (transcript.toLowerCase() === "arttır")
         question.sub_question_arr[1].q_answer.click();
-      else if (girdi.value.toLowerCase() === "azalt")
+      else if (transcript.toLowerCase() === "azalt")
         question.sub_question_arr[2].q_answer.click();
-      else if (!isNaN(girdi.value))
-        question.sub_question_arr[0].q_answer.value = girdi.value;
-      else if (girdi.value === "sil") 
+      else if (!isNaN(transcript)){
+        question.sub_question_arr[0].q_answer.value = transcript;
+        return test("ilerle");
+      }
+      else if (transcript === "sil") 
         question.sub_question_arr[0].q_answer.value = "0";
       else
         error_msg = "Yanlis girdi (Spinner)";
 
-      girdi.value = "";
       return;    
     }else if (question.type === "control_matrix") {
       var matrix_table = document.querySelector("table.form-matrix-table tbody");
       var trs = matrix_table.querySelectorAll("tr");
       var ths = [];
       trs[row_index+1].style.border = "3px solid red";
-      if (girdi.value === "ilerle") {
+      if (transcript === "ilerle") {
         
         if (row_index === sub_questions.length-1) {
           
@@ -408,17 +474,17 @@ function test() {
           row_index = 0;
           f_index++;
           highlighted();
-          girdi.value = "";
+          transcript = "";
          }
          else {
           trs[row_index+1].style.border = "none";
           row_index++;
           trs[row_index+1].style.border = "3px solid red";
-          girdi.value = "";    
+          transcript = "";    
         }
          break;
         
-      }else if (girdi.value === "geri gel") {
+      }else if (transcript === "geri gel") {
         if (row_index <= 0) {
           row_index = 0;
           trs[row_index+1].style.border = "none";
@@ -431,7 +497,7 @@ function test() {
           row_index--;
           trs[row_index+1].style.border = "3px solid red";
         }
-        girdi.value = "";
+        transcript = "";
         return;
       }
       else {
@@ -440,60 +506,60 @@ function test() {
           ths.push(trs[i].querySelector("th"));
         
         for (var i=0; i<sub_questions.length; i++) {
-          if (sub_questions[row_index][i].q_answer.corresponding.toLowerCase() === girdi.value) {
+          if (sub_questions[row_index][i].q_answer.corresponding.toLowerCase() === transcript) {
             sub_questions[row_index][i].q_answer.answer.click();
-            girdi.value = "";
-            return;
+            return test("ilerle");
           }
         }
       }
       return;
     }else if (question.type === "control_rating") {
-      if (girdi.value === "ilerle") {
+      if (transcript === "ilerle") {
         unhighlighted();
         f_index++;
         highlighted();
-        girdi.value = "";
         break;
-      }else if (girdi.value === "sil") {
+      }else if (transcript === "sil") {
         if (document.querySelector("div[title='Cancel Your Rating']") != undefined) {
           document.querySelector("div[title='Cancel Your Rating']").click();
         }
-        girdi.value = "";
         break;
-      }
-
-      var rate = parseInt(girdi.value);
-      
-      if (rate <= 0 || rate > sub_questions.length) {
-        error_msg = "Yanlis girdi (Rating)";
-      }else {
-        error_msg = "";
-        sub_questions[rate-1].q_answer.click();
-        girdi.value = "";
-      }
-
-      return;
-    }else if (question.type === "control_scale") {
-      if (girdi.value === "ilerle") {
-        unhighlighted();
-        f_index++;
-        highlighted();
-        girdi.value = "";
-        break;
-      }
-      else if (girdi.value === "geri gel") {
+      }else if (transcript === "geri gel") {
         unhighlighted();
         f_index--;
         highlighted();
-        girdi.value = "";
+        break;
+      }
+
+      var rate = parseInt(transcript);
+      
+      if (rate <= 0 || rate > sub_questions.length) {
+        error_msg = "Yanlis girdi (Rating)";
+      }else if (rate >= 0 && rate <= sub_questions.length)  {
+        error_msg = "";
+        sub_questions[rate-1].q_answer.click();
+        return test("ilerle");
+      }else
+        error_msg = "Yanlis girdi (Rating)";
+
+      return;
+    }else if (question.type === "control_scale") {
+      if (transcript === "ilerle") {
+        unhighlighted();
+        f_index++;
+        highlighted();
+        break;
+      }
+      else if (transcript === "geri gel") {
+        unhighlighted();
+        f_index--;
+        highlighted();
         break;
       }
       for (var i = 0; i < sub_questions.length; i++) {
-        if (sub_questions[i].q_answer.corresponding === girdi.value) {
+        if (sub_questions[i].q_answer.corresponding === transcript) {
           sub_questions[i].q_answer.answer.click();
-          girdi.value = "";
-          return;
+          return test("ilerle");
         }
       }
       error_msg = "Yanlıs girdi (Scale)";
@@ -503,38 +569,79 @@ function test() {
           highlighted();
           var sub_question = sub_questions[s_index];
           
-          if (girdi.value.toLowerCase() !== "ilerle" && girdi.value.toLowerCase() !== "ilerle2"
-              && girdi.value.toLowerCase() !== "geri gel" && girdi.value.toLowerCase() !== "geri gel2") {
+          if (transcript.toLowerCase() !== "ilerle" && transcript.toLowerCase() !== "ilerle2"
+              && transcript.toLowerCase() !== "geri gel" && transcript.toLowerCase() !== "geri gel2") {
             if (!facilitator_c(question.type)) {
-                if (girdi.value === "sil")
+                if (transcript === "sil"){
                   sub_question.q_answer.value = "";
+                  return;
+                }
                 else{
-                  if (question.type === "control_datetime")
-                    sub_question.q_answer.value = dateConvert(girdi.value.toLowerCase());
+                  if (question.type === "control_datetime"){
+                    sub_question.q_answer.value = dateConvert(transcript.toLowerCase());
+                    return test("ilerle");
+                  }
                   else if (question.type === "control_number") {
-                    if (!isNaN(girdi.value))
-                      sub_question.q_answer.value = girdi.value;
+                    if (!isNaN(transcript)){
+                      sub_question.q_answer.value = transcript;
+                      return test("ilerle");
+                    }
                     else
                       error_msg = "Yanlıs girdi (Not number)";
                   }
                   else
-                    if (canbeAdded(question.type))
-                      sub_question.q_answer.value += girdi.value + " ";
-                    else
-                      sub_question.q_answer.value = girdi.value;
+
+                    if (canbeAdded(question.type)){
+                      sub_question.q_answer.value = transcript;
+                      return test("ilerle");
+                    }
+                    else{
+                      if (question.type === "control_time") {
+                        if (sub_question.q_description === "AM/PM Option") {
+                          if (transcript === "öğleden sonra")
+                            transcript = "PM";
+                          else if (transcript === "öğleden önce")
+                            transcript = "AM";
+                          else if (transcript === "")
+                            break;
+                          else
+                            error_msg = "Yanlıs girdi (Time)";
+                        }
+                      }
+                      if (question.type === "control_dropdown") {
+                        if (transcript.indexOf(" seçenek") > 0) {
+                          if (!isNaN(transcript.substring(0, transcript.indexOf(" seçenek")-1))) {
+                            var x = parseInt(transcript.substring(0, transcript.indexOf(" seçenek")-1));
+                            if (x < sub_question.q_answer.length) {
+                                sub_question.q_answer.value = sub_question.q_answer[x].innerHTML.trim();
+                                return test("ilerle");
+                            }
+                          }
+                        }
+                        for (opt of sub_question.q_answer)
+                          if (opt.textContent.trim().toLowerCase() === transcript) {
+                            sub_question.q_answer.value = opt.textContent.trim();
+                            sub_question.q_answer.size = 0;
+                            return test("ilerle");
+                          }
+
+                        error_msg = "Yanlıs girdi (Dropdown)";
+                        break;
+                      }
+                      sub_question.q_answer.value = transcript;
+                      return test("ilerle");
+                    }
                 }
-                girdi.value = "";
             }
           }
-
-          if (girdi.value.toLowerCase() === "ilerle") {
+          else if (transcript.toLowerCase() === "ilerle") {
             unhighlighted();
             s_index++;
-            girdi.value = "ilerle2";
-          }else if (girdi.value.toLowerCase() === "geri gel") {
+            transcript = "ilerle2";
+          }else if (transcript.toLowerCase() === "geri gel") {
             unhighlighted();
             s_index--;
-            girdi.value = "geri gel2";
+            transcript = "geri gel2";
             if (s_index >=0)
               highlighted();
           }
@@ -545,23 +652,29 @@ function test() {
 
         if (s_index >= sub_questions.length) {
           s_index = 0;
-          girdi.value = "ilerle2";
+          transcript = "ilerle2";
         }else if (s_index < 0) {
           s_index = 0;
         }
         else
-          girdi.value = "";
+          transcript = "";
 
 
-        if (girdi.value === "ilerle2") {
+        if (transcript === "ilerle2") {
+          if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = 0;
+          }
           f_index++;
-          girdi.value = "";
-
+          if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
+          }
+          highlighted();
+          return;
         }
-        else if (girdi.value === "geri gel2") {
+        else if (transcript === "geri gel2") {
           f_index--;
           highlighted();
-          girdi.value = "";
+          transcript = "";
           break;
         }
         else{
@@ -571,25 +684,32 @@ function test() {
     console.log("\n");
   }
 
+  if (f_index === questions.length) {
+    f_index = 0;
+    s_index = 0;
+    submit_button.style.boxShadow = "0 0 3pt 3pt #719ECE";
+  }else if (f_index < 0){
+    f_index = 0;
+    s_index = 0;
+    highlighted();
+
+  }
+
   if (questions[f_index].type === "control_matrix") {
     var lines = document.querySelector("li[data-type = 'control_matrix']").querySelectorAll("tr");
     lines[row_index+1].style.border = "3px solid red";
   }
-  if (f_index === questions.length || f_index < 0) {
-    f_index = 0;
-    s_index = 0;
-    highlighted();
-  }
+  
 
 }
-//highlighted();
 
 document.querySelector("#listen").addEventListener("click", function(){
   listen();
 });
 
 document.querySelector("#show").addEventListener("click", function(){
-  test();
+  test(girdi.value);
+  girdi.value = "";
   document.querySelector("#error").innerHTML = error_msg;
 });
 
@@ -608,6 +728,7 @@ function facilitator_a(type) {
   if (type === "control_matrix" || type === "control_scale")
     return true;
   return false;
+
 }
 
 // boxShadow in q_answer
@@ -616,6 +737,7 @@ function facilitator_b(type) {
       type === "control_checkbox" || type === "control_rating")
       return false;
   return true;
+
 }
 
 // has q_answer to click
@@ -624,15 +746,16 @@ function facilitator_c(type) {
         type === "control_scale" || type === "control_rating")
       return true;
   return false;
+
 }
 
 function highlighted() {
-  
+    
   if (f_index < questions.length)
     if (s_index < questions[f_index].sub_question_arr.length)
       if (facilitator_b(questions[f_index].type)) {
         if (questions[f_index].sub_question_arr[s_index].q_answer != null)
-          questions[f_index].sub_question_arr[s_index].q_answer.style.boxShadow = "0 0 3pt 2pt #719ECE";
+          questions[f_index].sub_question_arr[s_index].q_answer.style.boxShadow = "0 0 3pt 3pt #719ECE";
       }
       else if (questions[f_index].type === "control_matrix") {
         var matrix_table = document.querySelector("table.form-matrix-table tbody");
@@ -641,12 +764,13 @@ function highlighted() {
         trs[row_index+1].style.border = "3px solid red";
 
         var lis = document.querySelector("li[data-type='"+ questions[f_index].type +"'");
-        lis.style.boxShadow = "0 0 3pt 2pt #719ECE";
+        lis.style.boxShadow = "0 0 3pt 3pt #719ECE";
       }
       else {
         var lis = document.querySelector("li[data-type='"+ questions[f_index].type +"'");
-        lis.style.boxShadow = "0 0 3pt 2pt #719ECE";
+        lis.style.boxShadow = "0 0 3pt 3pt #719ECE";
       }
+
 }
 
 function unhighlighted() {
@@ -660,6 +784,7 @@ function unhighlighted() {
         var lis = document.querySelector("li[data-type='"+ questions[f_index].type +"'");
         lis.style.boxShadow = "none";
       }
+
 }
 
 function dateConvert(date) {
@@ -709,6 +834,7 @@ function dateConvert(date) {
   }
 
   return dates[0] + "-" + dates[1] + "-" + dates[2];
+
 }
 
 function canbeAdded(type) {
@@ -716,4 +842,125 @@ function canbeAdded(type) {
         || type === "control_textbox" || type === "control_textarea")
     return true;
   return false;
+
+}
+
+function isAvailable(type) {
+  switch(type) {
+    case "control_fullname":
+      return true;
+    case "control_email":
+      return true;
+    case "control_phone":
+      return true;
+    case "control_address":
+      return true;
+    case "control_datetime":
+      return true;
+    case "control_time":
+      return true;
+    case "control_textbox":
+      return true;
+    case "control_textarea":
+      return true;
+    case "control_dropdown":
+      return true;
+    case "control_radio":
+      return true;
+    case "control_checkbox":
+      return true;
+    case "control_number":
+      return true;
+    case "control_spinner":
+      return true;
+    case "control_matrix":
+      return true;
+    case "control_scale":
+      return true;
+    case "control_rating":
+      return true;
+    default:
+      return false;
+  }
+
+}
+
+function findQuestionNumber(transcript) {
+  var temp = "";
+  if (transcript.indexOf(" git")) {
+    temp = transcript.substring(0, transcript.indexOf(" git"));
+
+    if (temp.indexOf("soruya") >= 0) {
+
+      if (temp.indexOf("ilk ") >= 0)
+        return 0;
+      
+      else if (temp.indexOf("son ") >= 0)
+        return questions.length-1;
+      
+      return parseInt(temp.substring(0, temp.indexOf("soruya")-2))-1;
+    }
+    else {
+      //console.log(temp);
+      for(var i=0; i<questions.length; i++)
+        if (temp.indexOf(questions[i].title.toLowerCase()) >=0 )
+          return i;
+    }
+  }
+
+  return -1;
+  
+}
+
+function updateIndexes(activeElement) {
+
+  var indexes = {
+    first_index: -1,
+    second_index: -1
+  };
+
+  for (var i=0; i<questions.length; i++) {
+    var sub_questions = questions[i].sub_question_arr;
+    for (var j=0; j<sub_questions.length; j++) {
+      if (!Array.isArray(sub_questions[j])) {
+        if (sub_questions[j].q_answer == activeElement) {
+          indexes.first_index = i;
+          indexes.second_index = j;
+          return indexes;
+        }
+      }
+    }
+  }
+
+  return indexes;
+
+}
+
+function findIndex(element) {
+  var header = element.querySelector("label").textContent.trim();
+  for(var i=0; i<questions.length; i++)
+    if (questions[i].title == header) {
+      unhighlighted();
+      if (questions[i].type !== "control_matrix") {
+        var matrix_table = document.querySelector("table.form-matrix-table tbody");
+        var trs = matrix_table.querySelectorAll("tr");
+        var ths = [];
+        trs[row_index+1].style.border = "none";
+      }
+      else if (questions[i].type !== "control_dropdown") {
+        questions[i].sub_question_arr[0].size = 0;
+      }
+      f_index = i;
+      if (questions[i].sub_question_arr.length <= s_index) {
+        s_index = 0;
+      }
+      if (questions[i].type === "control_dropdown") {
+        questions[i].sub_question_arr[0].q_answer.size = questions[i].sub_question_arr[0].q_answer.length;
+      }
+      highlighted();
+      return 0;
+    }
+
+  return -1;
+
 }
