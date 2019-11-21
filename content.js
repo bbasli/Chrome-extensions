@@ -1,3 +1,11 @@
+var questions = createQuestions();
+var f_index = 0;
+var s_index = 0;
+var flag = true;
+var row_index = 0 // for matrix
+var error_msg = "";
+const submit_button = document.querySelector("button.form-submit-button");
+
 function createQuestions () {
   let form_all = document.getElementsByClassName("form-all");
         let form = form_all[0].getElementsByTagName("li");
@@ -252,10 +260,10 @@ function test(transcript) {
     if (findQuestionNumber(transcript) >= 0) {
       unhighlighted();
       f_index = findQuestionNumber(transcript);
+      highlighted();
       if (questions[f_index].type === "control_dropdown") {
             questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
       }
-      highlighted();
       //console.log(f_index);
       return;
     }
@@ -276,6 +284,7 @@ function test(transcript) {
       transcript = "";
       break;
     }else if (transcript === "bitir" || transcript === "tamamla") {
+      debugger;
       submit_button.style.boxShadow = "0 0 3pt 3pt #719ECE";
       submit_button.click();
     }
@@ -573,10 +582,6 @@ function test(transcript) {
     console.log("\n");
   }
 
-  if (questions[f_index].type === "control_matrix") {
-    var lines = document.querySelector("li[data-type = 'control_matrix']").querySelectorAll("tr");
-    lines[row_index+1].style.border = "3px solid red";
-  }
   if (f_index === questions.length) {
     f_index = 0;
     s_index = 0;
@@ -587,6 +592,11 @@ function test(transcript) {
     highlighted();
 
   }
+
+  if (questions[f_index].type === "control_matrix") {
+    var lines = document.querySelector("li[data-type = 'control_matrix']").querySelectorAll("tr");
+    lines[row_index+1].style.border = "3px solid red";
+  } 
 
 }
 
@@ -792,11 +802,65 @@ function findQuestionNumber(transcript) {
   
 }
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
+function updateIndexes(activeElement) {
 
-recognition.onstart = function() {
-  console.log("Voice is activated, you can to microphoneeee");
+  var indexes = {
+    first_index: -1,
+    second_index: -1
+  };
+
+  for (var i=0; i<questions.length; i++) {
+    var sub_questions = questions[i].sub_question_arr;
+    for (var j=0; j<sub_questions.length; j++) {
+      if (!Array.isArray(sub_questions[j])) {
+        if (sub_questions[j].q_answer == activeElement) {
+          indexes.first_index = i;
+          indexes.second_index = j;
+          return indexes;
+        }
+      }
+    }
+  }
+
+  return indexes;
+
+}
+
+function findIndex(element) {
+  var header = element.querySelector("label").textContent.trim();
+  for(var i=0; i<questions.length; i++)
+    if (questions[i].title == header) {
+      unhighlighted();
+      if (questions[i].type !== "control_matrix") {
+        var matrix_table = document.querySelector("table.form-matrix-table tbody");
+        var trs = matrix_table.querySelectorAll("tr");
+        var ths = [];
+        trs[row_index+1].style.border = "none";
+      }
+      else if (questions[i].type !== "control_dropdown") {
+        questions[i].sub_question_arr[0].size = 0;
+      }
+      f_index = i;
+      if (questions[i].sub_question_arr.length <= s_index) {
+        s_index = 0;
+      }
+      if (questions[i].type === "control_dropdown") {
+        questions[i].sub_question_arr[0].q_answer.size = questions[i].sub_question_arr[0].q_answer.length;
+      }
+      highlighted();
+      return 0;
+    }
+
+  return -1;
+
+}
+
+function gotMessage(message, sender, sendResponse) {
+	if (message.txt == "run") {
+		highlighted();
+		listen();
+	}
+
 }
 
 function listen() {
@@ -825,29 +889,37 @@ function listen() {
     }
     
     recognition.start();
+
 }
 
-var questions = createQuestions();
-var f_index = 0;
-var s_index = 0;
-var flag = true;
-var row_index = 0 // for matrix
-var error_msg = "";
-const submit_button = document.querySelector("button.form-submit-button");
+document.addEventListener('focusin', function() {
+  if (document.activeElement != girdi) {
+    var indexes = updateIndexes(document.activeElement);
+    console.log(indexes);
+    if (indexes.first_index !== -1 && indexes.second_index !== -1) {
+      unhighlighted();
+      f_index = indexes.first_index;
+      s_index = indexes.second_index;
+      highlighted();
+    } 
+  }
+  
+}, true);
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+
+recognition.onstart = function() {
+  console.log("Voice is activated, you can to microphoneeee");
+}
 
 if (questions[f_index].type === "control_dropdown") {
   questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
 }
 
-
 chrome.runtime.onMessage.addListener(gotMessage);
 
-function gotMessage(message, sender, sendResponse) {
-	if (message.txt == "run") {
-		highlighted();
-		listen();
-	}
-}
+
 
 
 
