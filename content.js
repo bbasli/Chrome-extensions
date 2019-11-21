@@ -249,17 +249,35 @@ function test(transcript) {
     var question = questions[f_index];
     var sub_questions = question.sub_question_arr;
     
+    if (findQuestionNumber(transcript) >= 0) {
+      unhighlighted();
+      f_index = findQuestionNumber(transcript);
+      if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
+      }
+      highlighted();
+      //console.log(f_index);
+      return;
+    }
     if (transcript === "atla") {
       unhighlighted();
       if (questions[f_index].type === "control_matrix") {
         var lines = document.querySelector("li[data-type = 'control_matrix']").querySelectorAll("tr");
         lines[row_index+1].style.border = "none";
+      }if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = 0;
       }
       f_index++;
+      if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
+      }
       s_index = 0;
       highlighted();
       transcript = "";
       break;
+    }else if (transcript === "bitir" || transcript === "tamamla") {
+      submit_button.style.boxShadow = "0 0 3pt 3pt #719ECE";
+      submit_button.click();
     }
 
     if (question.type === "control_radio"  || question.type === "control_checkbox") {
@@ -271,6 +289,9 @@ function test(transcript) {
         break;
       }else if (transcript === "geri gel") {
         unhighlighted();
+        if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = 0;
+        }
         f_index--;
         highlighted();
         transcript = "";
@@ -287,7 +308,7 @@ function test(transcript) {
         for (var i = 0; i<options.length; i++){
           if (options[i].q_description.toLowerCase() === transcript){
             options[i].q_answer.click();
-            return;
+            return test("ilerle");
           }
         }
         if (transcript.indexOf(". seçenek") > 0) {
@@ -304,24 +325,29 @@ function test(transcript) {
       transcript = "";
       return;
     }else if (question.type === "control_spinner") {
-      if (transcript.toLowerCase() === "ilerle") {
+      if (transcript === "ilerle") {
         unhighlighted();
         f_index++;
         highlighted();
-        transcript = "";
+        break;
+      }else if (transcript === "geri gel") {
+        unhighlighted();
+        f_index--;
+        highlighted();
         break;
       }else if (transcript.toLowerCase() === "arttır")
         question.sub_question_arr[1].q_answer.click();
       else if (transcript.toLowerCase() === "azalt")
         question.sub_question_arr[2].q_answer.click();
-      else if (!isNaN(transcript))
+      else if (!isNaN(transcript)){
         question.sub_question_arr[0].q_answer.value = transcript;
+        return test("ilerle");
+      }
       else if (transcript === "sil") 
         question.sub_question_arr[0].q_answer.value = "0";
       else
         error_msg = "Yanlis girdi (Spinner)";
 
-      transcript = "";
       return;    
     }else if (question.type === "control_matrix") {
       var matrix_table = document.querySelector("table.form-matrix-table tbody");
@@ -371,8 +397,7 @@ function test(transcript) {
         for (var i=0; i<sub_questions.length; i++) {
           if (sub_questions[row_index][i].q_answer.corresponding.toLowerCase() === transcript) {
             sub_questions[row_index][i].q_answer.answer.click();
-            transcript = "";
-            return;
+            return test("ilerle");
           }
         }
       }
@@ -382,13 +407,16 @@ function test(transcript) {
         unhighlighted();
         f_index++;
         highlighted();
-        transcript = "";
         break;
       }else if (transcript === "sil") {
         if (document.querySelector("div[title='Cancel Your Rating']") != undefined) {
           document.querySelector("div[title='Cancel Your Rating']").click();
         }
-        transcript = "";
+        break;
+      }else if (transcript === "geri gel") {
+        unhighlighted();
+        f_index--;
+        highlighted();
         break;
       }
 
@@ -396,11 +424,12 @@ function test(transcript) {
       
       if (rate <= 0 || rate > sub_questions.length) {
         error_msg = "Yanlis girdi (Rating)";
-      }else {
+      }else if (rate >= 0 && rate <= sub_questions.length)  {
         error_msg = "";
         sub_questions[rate-1].q_answer.click();
-        transcript = "";
-      }
+        return test("ilerle");
+      }else
+        error_msg = "Yanlis girdi (Rating)";
 
       return;
     }else if (question.type === "control_scale") {
@@ -408,21 +437,18 @@ function test(transcript) {
         unhighlighted();
         f_index++;
         highlighted();
-        transcript = "";
         break;
       }
       else if (transcript === "geri gel") {
         unhighlighted();
         f_index--;
         highlighted();
-        transcript = "";
         break;
       }
       for (var i = 0; i < sub_questions.length; i++) {
         if (sub_questions[i].q_answer.corresponding === transcript) {
           sub_questions[i].q_answer.answer.click();
-          transcript = "";
-          return;
+          return test("ilerle");
         }
       }
       error_msg = "Yanlıs girdi (Scale)";
@@ -435,51 +461,69 @@ function test(transcript) {
           if (transcript.toLowerCase() !== "ilerle" && transcript.toLowerCase() !== "ilerle2"
               && transcript.toLowerCase() !== "geri gel" && transcript.toLowerCase() !== "geri gel2") {
             if (!facilitator_c(question.type)) {
-                if (transcript === "sil")
+                if (transcript === "sil"){
                   sub_question.q_answer.value = "";
+                  return;
+                }
                 else{
-                  if (question.type === "control_datetime")
+                  if (question.type === "control_datetime"){
                     sub_question.q_answer.value = dateConvert(transcript.toLowerCase());
+                    return test("ilerle");
+                  }
                   else if (question.type === "control_number") {
-                    if (!isNaN(transcript))
+                    if (!isNaN(transcript)){
                       sub_question.q_answer.value = transcript;
+                      return test("ilerle");
+                    }
                     else
                       error_msg = "Yanlıs girdi (Not number)";
                   }
                   else
 
-                    if (canbeAdded(question.type))
-                      sub_question.q_answer.value += transcript + " ";
+                    if (canbeAdded(question.type)){
+                      sub_question.q_answer.value = transcript;
+                      return test("ilerle");
+                    }
                     else{
                       if (question.type === "control_time") {
-                        if (transcript === "öğleden sonra")
-                          transcript = "PM";
-                        else if (transcript === "öğleden önce")
-                          transcript = "AM";
-                        else if (transcript === "")
-                          break;
-                        else
-                          error_msg = "Yanlıs girdi (Time)";
+                        if (sub_question.q_description === "AM/PM Option") {
+                          if (transcript === "öğleden sonra")
+                            transcript = "PM";
+                          else if (transcript === "öğleden önce")
+                            transcript = "AM";
+                          else if (transcript === "")
+                            break;
+                          else
+                            error_msg = "Yanlıs girdi (Time)";
+                        }
                       }
                       if (question.type === "control_dropdown") {
-                        
+                        if (transcript.indexOf(" seçenek") > 0) {
+                          if (!isNaN(transcript.substring(0, transcript.indexOf(" seçenek")-1))) {
+                            var x = parseInt(transcript.substring(0, transcript.indexOf(" seçenek")-1));
+                            if (x < sub_question.q_answer.length) {
+                                sub_question.q_answer.value = sub_question.q_answer[x].innerHTML.trim();
+                                return test("ilerle");
+                            }
+                          }
+                        }
                         for (opt of sub_question.q_answer)
                           if (opt.textContent.trim().toLowerCase() === transcript) {
                             sub_question.q_answer.value = opt.textContent.trim();
-                            return;
+                            sub_question.q_answer.size = 0;
+                            return test("ilerle");
                           }
 
                         error_msg = "Yanlıs girdi (Dropdown)";
                         break;
                       }
                       sub_question.q_answer.value = transcript;
+                      return test("ilerle");
                     }
                 }
-                transcript = "";
             }
           }
-
-          if (transcript.toLowerCase() === "ilerle") {
+          else if (transcript.toLowerCase() === "ilerle") {
             unhighlighted();
             s_index++;
             transcript = "ilerle2";
@@ -506,9 +550,15 @@ function test(transcript) {
 
 
         if (transcript === "ilerle2") {
+          if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = 0;
+          }
           f_index++;
-          transcript = "";
-
+          if (questions[f_index].type === "control_dropdown") {
+            questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
+          }
+          highlighted();
+          return;
         }
         else if (transcript === "geri gel2") {
           f_index--;
@@ -527,10 +577,15 @@ function test(transcript) {
     var lines = document.querySelector("li[data-type = 'control_matrix']").querySelectorAll("tr");
     lines[row_index+1].style.border = "3px solid red";
   }
-  if (f_index === questions.length || f_index < 0) {
+  if (f_index === questions.length) {
+    f_index = 0;
+    s_index = 0;
+    submit_button.style.boxShadow = "0 0 3pt 3pt #719ECE";
+  }else if (f_index < 0){
     f_index = 0;
     s_index = 0;
     highlighted();
+
   }
 
 }
@@ -710,6 +765,33 @@ function isAvailable(type) {
 
 }
 
+function findQuestionNumber(transcript) {
+  var temp = "";
+  if (transcript.indexOf(" git")) {
+    temp = transcript.substring(0, transcript.indexOf(" git"));
+
+    if (temp.indexOf("soruya") >= 0) {
+
+      if (temp.indexOf("ilk ") >= 0)
+        return 0;
+      
+      else if (temp.indexOf("son ") >= 0)
+        return questions.length-1;
+      
+      return parseInt(temp.substring(0, temp.indexOf("soruya")-2))-1;
+    }
+    else {
+      //console.log(temp);
+      for(var i=0; i<questions.length; i++)
+        if (temp.indexOf(questions[i].title.toLowerCase()) >=0 )
+          return i;
+    }
+  }
+
+  return -1;
+  
+}
+
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
@@ -751,6 +833,12 @@ var s_index = 0;
 var flag = true;
 var row_index = 0 // for matrix
 var error_msg = "";
+const submit_button = document.querySelector("button.form-submit-button");
+
+if (questions[f_index].type === "control_dropdown") {
+  questions[f_index].sub_question_arr[0].q_answer.size = questions[f_index].sub_question_arr[0].q_answer.length;
+}
+
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
